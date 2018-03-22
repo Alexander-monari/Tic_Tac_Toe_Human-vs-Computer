@@ -1,0 +1,770 @@
+/**Program makes a ticTacToe game
+  * @author Alex Monari
+  * @date 3/19/18
+  */
+import static java.lang.System.out;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.util.*;
+
+
+public class TicTacToeFrame extends JFrame implements ActionListener{
+  
+  //create JTextFields for game board, winner output, and human and computer display
+  private JTextField x00,x01,x02,x10,x11,x12,x20,x21,x22, winner, humanSymbol, computerSymbol;
+  private static String[][] matrix = new String[3][3];//creates 2d array on which to play tictactoe
+  private static int[][] boardInstance = new int[3][3];//0 for o's, 1 for x's, and -1 for open spots
+  //create JButtons for play, clear, choose x/o and show graph of board in real time
+  private JButton playButton,clearButton,xButton,oButton,graphButton;
+  //create JLabel for human and computer displays and for invalid text entry warnings
+  private JLabel human, computer, invalidEntry;
+  Scanner key = new Scanner(System.in);//import scanner if choosing to read in user choice of x/o
+  
+  //TicTacToeFram constructor
+  public TicTacToeFrame(){
+    //create JFrame
+    GridBagConstraints spot = null;
+    setSize(1000,1000);
+    //sets Frame title
+    setTitle("     Tic Tac Toe ");
+    human = new JLabel("Humane");//set Human to green
+    human.setForeground(Color.GREEN);
+    computer = new JLabel("Computer");//set Computer to red
+    computer.setForeground(Color.RED);
+    invalidEntry = new JLabel(" ");//set Invalid entry to magenta
+    invalidEntry.setForeground(Color.MAGENTA);
+    
+    //initialize matrix to a different number for each array value
+    int count = 0;
+    for (int i = 0; i < matrix.length; i++){
+      for (int j = 0; j < matrix[i].length; j++){
+        matrix[i][j] = Integer.toString(count);
+        count++;
+      }
+    }
+    //add playbutton with actionlistener
+    playButton = new JButton("Play");
+    playButton.addActionListener(this);
+    //add clearbutton the same
+    clearButton = new JButton("Clear");
+    clearButton.addActionListener(this);
+    //add choose X button
+    xButton = new JButton("X");
+    xButton.addActionListener(this);
+    //add choose O button
+    oButton = new JButton("O");
+    oButton.addActionListener(this);
+    //add graph isntance button
+    graphButton = new JButton("Graph");
+    graphButton.addActionListener(this);
+    //create GridBag variable spot
+    setLayout(new GridBagLayout());
+    spot = new GridBagConstraints();
+    //create Insets
+    spot.insets = new Insets(10, 10, 10, 10);
+    //Human symbol
+    humanSymbol = new JTextField(4);
+    humanSymbol.setEditable(false);
+    humanSymbol.setText(" ");
+    //Computer symbol
+    computerSymbol = new JTextField(4);
+    computerSymbol.setEditable(false);
+    computerSymbol.setText(" ");
+    
+    
+    //create all 9 textFields for each playing spot on the board
+    x00 = new JTextField(3);
+    x00.setEditable(true);
+    x00.setText("  ");
+    
+    x01 = new JTextField(3);
+    x01.setEditable(true);
+    x01.setText("  ");
+    
+    x02 = new JTextField(3);
+    x02.setEditable(true);
+    x02.setText("  ");
+    
+    x10 = new JTextField(3);
+    x10.setEditable(true);
+    x10.setText("  ");
+    
+    x11 = new JTextField(3);
+    x11.setEditable(true);
+    x11.setText("  ");
+    
+    x12 = new JTextField(3);
+    x12.setEditable(true);
+    x12.setText("  ");
+    
+    x20 = new JTextField(3);
+    x20.setEditable(true);
+    x20.setText("  ");
+    
+    x21 = new JTextField(3);
+    x21.setEditable(true);
+    x21.setText("  ");
+    
+    x22 = new JTextField(3);
+    x22.setEditable(true);
+    x22.setText("  ");
+    
+    
+    //create winner display
+    winner = new JTextField(8);
+    winner.setEditable(false);
+    winner.setText("  ");
+    //add chose xButton to frame
+    spot.gridx = 3;
+    spot.gridy = 0;
+    add(xButton, spot);
+    //add chose oButton to frame
+    spot.gridx = 3;
+    spot.gridy = 1;
+    add(oButton, spot);
+    //add invalid entry warning to frame
+    spot.gridx = 3;
+    spot.gridy = 3;
+    add(invalidEntry, spot);
+    //add graph instance button to frame
+    spot.gridx = 3;
+    spot.gridy = 2;
+    add(graphButton, spot);
+    
+    
+    //add all 9 textFields to frame
+    spot.gridx = 0;
+    spot.gridy = 0;
+    add(x00, spot);
+    
+    spot.gridx = 0;
+    spot.gridy = 1;
+    add(x01, spot);
+    
+    spot.gridx = 0;
+    spot.gridy = 2;
+    add(x02, spot);
+    
+    spot.gridx = 1;
+    spot.gridy = 0;
+    add(x10, spot);
+    
+    spot.gridx = 1;
+    spot.gridy = 1;
+    add(x11, spot);
+    
+    spot.gridx = 1;
+    spot.gridy = 2;
+    add(x12, spot);
+    
+    spot.gridx = 2;
+    spot.gridy = 0;
+    add(x20, spot);
+    
+    spot.gridx = 2;
+    spot.gridy = 1;
+    add(x21, spot);
+    
+    spot.gridx = 2;
+    spot.gridy = 2;
+    add(x22, spot);
+    
+    
+    //add the rest to frame
+    spot.gridx = 0;
+    spot.gridy = 3;
+    add(playButton, spot);
+    
+    spot.gridx = 1;
+    spot.gridy = 3;
+    add(winner, spot);
+    
+    spot.gridx = 2;
+    spot.gridy = 3;
+    add(clearButton, spot);
+    
+    spot.gridx = 1;
+    spot.gridy = 4;
+    add(humanSymbol, spot);
+    
+    spot.gridx = 2;
+    spot.gridy = 4;
+    add(computerSymbol, spot);
+    
+    spot.gridx = 0;
+    spot.gridy = 4;
+    add(human,spot);
+    
+    spot.gridx = 3;
+    spot.gridy = 4;
+    add(computer, spot);
+    
+    this.pack();//pack this instance of constructor
+  }
+  
+  /**Method actionPerformed creates results for actions initialed by the user
+    * @param ActionEvent event
+    */
+  public void actionPerformed (ActionEvent event){
+    
+    String field;//create field to hold trimmed text
+    //create instance of board to use for math
+    for (int i = 0; i < boardInstance.length; i++){
+        for (int j = 0; j < boardInstance[i].length; j++)
+          boardInstance[i][j] = -1;
+    }
+    
+    //render graph instance
+    if (event.getSource() == graphButton){
+      
+      //check position of every spot on board and assign each into a 2D matrix
+      field = x00.getText().trim();//hold trimmed text in field
+      if (field.equals("x"))
+        boardInstance[0][0] = 1;
+      else if (field.equals("o"))
+        boardInstance[0][0] = 0;
+      else
+        boardInstance[0][0] = -1;
+      
+      field = x01.getText().trim();
+      if (field.equals("x"))
+        boardInstance[0][1] = 1;
+      else if (field.equals("o"))
+        boardInstance[0][1] = 0;
+      else
+        boardInstance[0][1] = -1;
+      
+      field = x02.getText().trim();
+      if (field.equals("x"))
+        boardInstance[0][2] = 1;
+      else if (field.equals("o"))
+        boardInstance[0][2] = 0;
+      else
+        boardInstance[0][2] = -1;
+      
+      field = x10.getText().trim();
+      if (field.equals("x"))
+        boardInstance[1][0] = 1;
+      else if (field.equals("o"))
+        boardInstance[1][0] = 0;
+      else
+        boardInstance[1][0] = -1;
+      
+      field = x11.getText().trim();
+      if (field.equals("x"))
+        boardInstance[1][1] = 1;
+      else if (field.equals("o"))
+        boardInstance[1][1] = 0;
+      else
+        boardInstance[1][1] = -1;
+      
+      field = x12.getText().trim();
+      if (field.equals("x"))
+        boardInstance[1][2] = 1;
+      else if (field.equals("o"))
+        boardInstance[1][2] = 0;
+      else
+        boardInstance[1][2] = -1;
+      
+      field = x20.getText().trim();
+      if (field.equals("x"))
+        boardInstance[2][0] = 1;
+      else if (field.equals("o"))
+        boardInstance[2][0] = 0;
+      else
+        boardInstance[2][0] = -1;
+      
+      field = x21.getText().trim();
+      if (field.equals("x"))
+        boardInstance[2][1] = 1;
+      else if (field.equals("o"))
+        boardInstance[2][1] = 0;
+      else
+        boardInstance[2][1] = -1;
+      
+      field = x22.getText().trim();
+      if (field.equals("x"))
+        boardInstance[2][2] = 1;
+      else if (field.equals("o"))
+        boardInstance[2][2] = 0;
+      else
+        boardInstance[2][2] = -1;
+      
+      //prints boardInstance inside compiler for reference purposes
+      out.println(boardInstance[0][0] + " " + boardInstance[1][0] + " " + boardInstance[2][0]
+                    + "\n" + boardInstance[0][1] + " " + boardInstance[1][1] + " " + boardInstance[2][1]
+                    + "\n" + boardInstance[0][2] + " " + boardInstance[1][2] + " " + boardInstance[2][2]);
+    }//end if (graphButton)
+    
+    
+    //creates new instance of field and plays computer move on click
+    if (event.getSource() == playButton){
+      
+      //asign 2D matrix board values
+      field = x00.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[0][0] = field;
+      
+      field = x01.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[0][1] = field;
+      
+      field = x02.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[0][2] = field;
+      
+      field = x10.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[1][0] = field;
+      
+      field = x11.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[1][1] = field;
+      
+      field = x12.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[1][2] = field;
+      
+      field = x20.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[2][0] = field;
+      
+      field = x21.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[2][1] = field;
+      
+      field = x22.getText().trim();
+      if (field.equals("x")||field.equals("o"))
+        matrix[2][2] = field;
+        
+      
+      //closes textField edit ability
+      x00.setEditable(false);
+      x01.setEditable(false);
+      x02.setEditable(false);
+      x10.setEditable(false);
+      x11.setEditable(false);
+      x12.setEditable(false);
+      x20.setEditable(false);
+      x21.setEditable(false);
+      x22.setEditable(false);
+      
+      //create instance of coordinate from single int
+      int xcoord = 0, ycoord = 0;
+      //prints marix instance inside compiler for reference
+      out.println(matrix[0][0] + " " + matrix[1][0] + " " + matrix[2][0]
+                    + "\n" + matrix[0][1] + " " + matrix[1][1] + " " + matrix[2][1]
+                    + "\n" + matrix[0][2] + " " + matrix[1][2] + " " + matrix[2][2]);
+                    
+      
+      out.println(computerSymbol.getText().trim());
+      String test = computerSymbol.getText().trim();//reads either x/o and assigns value to test
+      out.println(test);//check instance of test inside compiler
+      
+      if (computerMove(matrix) == -4)
+        winner.setText(" Tie");
+      
+      
+      if (test.charAt(0) == 'O'){
+      if (computerMove(matrix) == -2)
+        winner.setText(" Human Wins ");
+      if (computerMove(matrix) == -3)
+        winner.setText(" Computer Wins ");
+      }
+      else{
+        if (computerMove(matrix) == -3)
+        winner.setText(" Human Wins ");
+      if (computerMove(matrix) == -2)
+        winner.setText(" Computer Wins ");
+      }
+      //assigns coordinate values from outcome for computer decision
+      if (computerMove(matrix) >= 10){
+        xcoord = computerMove(matrix) / 10;
+        ycoord = computerMove(matrix) % 10;
+      }
+      else{//corrects for references to 0 x coordinate returns from computerMove
+        xcoord = 0;
+        ycoord = computerMove(matrix);
+      }
+      //check instance of computerMove inside compiler
+      out.println(xcoord + " " + ycoord);
+      
+      //set x's moves
+      if (test.charAt(0) == 'X'){
+      if(xcoord == 0 && ycoord == 0)
+        x00.setText("x");
+      if(xcoord == 0 && ycoord == 1)
+        x01.setText("x");
+      if(xcoord == 0 && ycoord == 2)
+        x02.setText("x");
+      if(xcoord == 1 && ycoord == 0)
+        x10.setText("x");
+      if(xcoord == 1 && ycoord == 1)
+        x11.setText("x");
+      if(xcoord == 1 && ycoord == 2)
+        x12.setText("x");
+      if(xcoord == 2 && ycoord == 0)
+        x20.setText("x");
+      if(xcoord == 2 && ycoord == 1)
+        x21.setText("x");
+      if(xcoord == 2 && ycoord == 2)
+        x22.setText("x");
+      }
+      //set o's moves
+      else if (test.charAt(0) == 'O'){
+        if(xcoord == 0 && ycoord == 0)
+        x00.setText("o");
+      if(xcoord == 0 && ycoord == 1)
+        x01.setText("o");
+      if(xcoord == 0 && ycoord == 2)
+        x02.setText("o");
+      if(xcoord == 1 && ycoord == 0)
+        x10.setText("o");
+      if(xcoord == 1 && ycoord == 1)
+        x11.setText("o");
+      if(xcoord == 1 && ycoord == 2)
+        x12.setText("o");
+      if(xcoord == 2 && ycoord == 0)
+        x20.setText("o");
+      if(xcoord == 2 && ycoord == 1)
+        x21.setText("o");
+      if(xcoord == 2 && ycoord == 2)
+        x22.setText("o");
+      }
+      
+      else
+        out.println("Player not recognized");//error check
+      
+      //return player move after computer has made decision
+      x00.setEditable(true);
+      x01.setEditable(true);
+      x02.setEditable(true);
+      x10.setEditable(true);
+      x11.setEditable(true);
+      x12.setEditable(true);
+      x20.setEditable(true);
+      x21.setEditable(true);
+      x22.setEditable(true);
+    }//end if (playButton)
+    
+    //clearButton event resets all editable fields in Jframe
+    if (event.getSource() == clearButton){
+      //returns board to empty text
+      x00.setText(" ");
+      x01.setText(" ");
+      x02.setText(" ");
+      x10.setText(" ");
+      x11.setText(" ");
+      x12.setText(" ");
+      x20.setText(" ");
+      x21.setText(" ");
+      x22.setText(" ");
+      
+      //returns matrix instance to random String values
+      for (int i = 0; i < matrix.length; i++){
+        for (int j = 0; j < matrix[i].length; j++)
+          matrix[i][j] = Integer.toString(j + i);
+      }//end outer for loop
+      
+      //resets human and computer symbols and reopens chose x/o buttons
+      humanSymbol.setText(" ");
+      computerSymbol.setText(" ");
+      winner.setText(" ");
+      xButton.setEnabled(true);
+      oButton.setEnabled(true);
+    }//end if(clearButton)
+    
+    //sets human to o
+    if (event.getSource() == oButton){
+      humanSymbol.setText("O");//sets human to o
+      computerSymbol.setText("X");//sets computer to x
+      oButton.setEnabled(false);//closes buttons
+      xButton.setEnabled(false);
+    }//end if (oButton)
+    
+    //sets human to x
+    if (event.getSource() == xButton){
+      humanSymbol.setText("X");//sets human to x
+      computerSymbol.setText("O");//sets computer to o
+      xButton.setEnabled(false);//closes buttons
+      oButton.setEnabled(false);
+    }//end if (xButton)
+  }
+  
+  //checkTTT method DOES NOT tell winner, just tests if human/computer has won the game or not
+  /**Method tests if there are 3 in a row anywhere on the board
+    * @param 2 dimensional String array
+    * @return true if 3 of the same symbol are in a row; otherwise false
+    */
+  public boolean checkTTT (String [][] matrix){
+      
+    if ((matrix[0][0] == matrix[0][1] && matrix[0][0] == matrix[0][2]) ||
+      (matrix[0][0] == matrix[1][0] && matrix[0][0] == matrix[2][0]) ||
+            (matrix[0][0] == matrix[1][1] && matrix[0][0] == matrix[2][2]) ||
+      (matrix[0][2] == matrix[1][1] && matrix[0][2] == matrix[2][0]) ||
+            (matrix[0][1] == matrix[1][1] && matrix[0][1] == matrix[2][1]) ||
+      (matrix[0][2] == matrix[1][1] && matrix[0][2] == matrix[2][2]) ||
+            (matrix[1][0] == matrix[1][1] && matrix[1][0] == matrix[1][2]) ||
+      (matrix[2][0] == matrix[2][1] && matrix[2][0] == matrix[2][2]))
+      return true;//if winning instance is found within current instance of the board
+    else return false;//if not 3 are in a row
+  }//end checkTTT
+  
+  
+  /**method finds the optimal move for each instance of tic tac toe
+    * @param 2D String matrix
+    * @return int corrdinate to be deconstructed in playButton actionPerformed source
+    */
+  public int computerMove (String [][] findSpot){
+    
+    //0 for o's, 1 for x's, and -1 for open spots
+    int [][] findOptimal = new int[3][3];
+    
+    //creates an empty board
+    for (int i = 0; i < findOptimal.length; i++){
+        for (int j = 0; j < findOptimal[i].length; j++)
+          findOptimal[i][j] = -1;
+    }//end for loop initialization
+    //checks if game has been won
+    if (checkTTT(findSpot) == false){
+      for (int i = 0; i < findSpot.length; i++){
+        for (int j = 0; j < findSpot[i].length; j++){
+          if (findSpot[i][j].equals("o"))
+            findOptimal[i][j] = 0;//sets all o's to 0
+          else if (findSpot[i][j].equals("x"))
+            findOptimal[i][j] = 1;//sets all x's to 1
+          else
+            findOptimal[i][j] = -1;//ensures all empty spaces are set to empty inside findOptimal isntance
+        }//end inner for loop
+      }//end outer for loop
+    }//end if statement
+    
+    //board is filled condition throws tie message
+    if (findOptimal[0][0] != -1 && findOptimal[0][1] != -1 && findOptimal[0][2] != -1 &&
+        findOptimal[1][0] != -1 && findOptimal[1][1] != -1 && findOptimal[1][2] != -1 &&
+        findOptimal[2][0] != -1 && findOptimal[2][1] != -1 && findOptimal[2][2] != -1)
+      return -4;//for tie condition
+    
+    //x's have won the game
+    if ((findOptimal[0][0] == 1 && findOptimal[0][1] == 1 && findOptimal[0][2] == 1) ||
+      (findOptimal[0][0] == 1 && findOptimal[1][0] == 1 && findOptimal[2][0] == 1) ||
+            (findOptimal[0][0] == 1 && findOptimal[1][1] == 1 && findOptimal[2][2] == 1) ||
+      (findOptimal[0][2] == 1 && findOptimal[1][1] == 1 && findOptimal[2][0] == 1) ||
+            (findOptimal[0][1] == 1 && findOptimal[1][1] == 1 && findOptimal[2][1] == 1) ||
+      (findOptimal[0][2] == 1 && findOptimal[1][1] == 1 && findOptimal[2][2] == 1) ||
+            (findOptimal[1][0] == 1 && findOptimal[1][1] == 1 && findOptimal[1][2] == 1) ||
+      (findOptimal[2][0] == 1 && findOptimal[2][1] == 1 && findOptimal[2][2] == 1))
+      return -2;//for x is winner
+    
+    //o's have won the game
+    if ((findOptimal[0][0] == 0 && findOptimal[0][1] == 0 && findOptimal[0][2] == 0) ||
+      (findOptimal[0][0] == 0 && findOptimal[1][0] == 0 && findOptimal[2][0] == 0) ||
+            (findOptimal[0][0] == 0 && findOptimal[1][1] == 0 && findOptimal[2][2] == 0) ||
+      (findOptimal[0][2] == 0 && findOptimal[1][1] == 0 && findOptimal[2][0] == 0) ||
+            (findOptimal[0][1] == 0 && findOptimal[1][1] == 0 && findOptimal[2][1] == 0) ||
+      (findOptimal[0][2] == 0 && findOptimal[1][1] == 0 && findOptimal[2][2] == 0) ||
+            (findOptimal[1][0] == 0 && findOptimal[1][1] == 0 && findOptimal[1][2] == 0) ||
+      (findOptimal[2][0] == 0 && findOptimal[2][1] == 0 && findOptimal[2][2] == 0))
+      return -3;//for o is winner
+    
+    //shows first column and middle spot for references, only shown in compiler
+    out.println(findOptimal[0][0] + " " + findOptimal[0][1] + " " + findOptimal[0][2] + " " + findOptimal[1][1]);
+    
+    //opening moves
+    //choose middle for optimal second move placement
+    if (findOptimal[0][0] == -1 && findOptimal[0][1] == -1 && findOptimal[0][2] == -1 &&
+        findOptimal[1][0] == -1 && findOptimal[1][1] == -1 && findOptimal[1][2] == -1 &&
+        findOptimal[2][0] == -1 && findOptimal[2][1] == -1 && findOptimal[2][2] == -1)
+      return 11;
+    
+    //choose top right corner after human fills 1,1 for optimal position
+    if (findOptimal[0][0] == -1 && findOptimal[0][1] == -1 && findOptimal[0][2] == -1 &&
+        findOptimal[1][0] == -1 && findOptimal[1][1] != -1 && findOptimal[1][2] == -1 &&
+        findOptimal[2][0] == -1 && findOptimal[2][1] == -1 && findOptimal[2][2] == -1)
+      return 20;
+    
+    //choose top left corner after spots 1,1 and 2,0 are filled for optimal position
+    if (findOptimal[0][0] == -1 && findOptimal[0][1] == -1 && findOptimal[0][2] == -1 &&
+        findOptimal[1][0] == -1 && findOptimal[1][1] != -1 && findOptimal[1][2] == -1 &&
+        findOptimal[2][0] != -1 && findOptimal[2][1] == -1 && findOptimal[2][2] == -1)
+      return 0;
+    
+    //chose bottom right corner to block and create tie rather than loss
+    if (findOptimal[0][0] == findOptimal[1][1] && findOptimal[0][1] == -1 && findOptimal[0][2] == -1 &&
+        findOptimal[1][0] == -1 && findOptimal[1][2] == -1 &&
+        findOptimal[2][0] != -1 && findOptimal[2][1] == -1 && findOptimal[2][2] == -1)
+      return 22;
+    
+    //chose top right corner to force a win/tie condition for computer
+    if (findOptimal[0][0] == findOptimal[1][1] && findOptimal[0][1] == -1 && findOptimal[2][0] == -1 &&
+        findOptimal[1][0] == -1 && findOptimal[1][2] == -1 &&
+        findOptimal[2][1] == -1 && findOptimal[2][2] == findOptimal[0][2])
+      return 20;
+    
+    //all game winning moves tried for optimal winning strategy
+    //columns
+    if (findOptimal[0][0] == 1 && findOptimal[0][1] == 1 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    else
+      
+    if (findOptimal[1][0] == 1 && findOptimal[1][1] == 1 && findOptimal[1][2] == -1)
+      return 12;//x12.setText("x");
+    if (findOptimal[2][0] == 1 && findOptimal[2][1] == 1 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 1 && findOptimal[0][2] == 1 && findOptimal[0][1] == -1)
+      return 1;//x01.setText("x");
+    if (findOptimal[1][0] == 1 && findOptimal[1][2] == 1 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][0] == 1 && findOptimal[2][2] == 1 && findOptimal[2][1] == -1)
+      return 21;//x21.setText("x");
+    if (findOptimal[0][1] == 1 && findOptimal[0][2] == 1 && findOptimal[0][0] == -1)
+      return 0;//x00.setText("x");
+    if (findOptimal[1][1] == 1 && findOptimal[1][2] == 1 && findOptimal[1][0] == -1)
+      return 10;//x10.setText("x");
+    if (findOptimal[2][1] == 1 && findOptimal[2][2] == 1 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+  
+    //rows
+    if (findOptimal[0][0] == 1 && findOptimal[1][0] == 1 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+    if (findOptimal[0][1] == 1 && findOptimal[1][1] == 1 && findOptimal[2][1] == -1)
+      return 21;//x21.setText("x");
+    if (findOptimal[0][2] == 1 && findOptimal[1][2] == 1 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 1 && findOptimal[2][0] == 1 && findOptimal[1][0] == -1)
+      return 10;//x10.setText("x");
+    if (findOptimal[0][1] == 1 && findOptimal[2][1] == 1 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[0][2] == 1 && findOptimal[2][2] == 1 && findOptimal[1][2] == -1)
+      return 12;//x12.setText("x");
+    if (findOptimal[1][0] == 1 && findOptimal[2][0] == 1 && findOptimal[0][0] == -1)
+      return 0;//x00.setText("x");
+    if (findOptimal[1][1] == 1 && findOptimal[2][1] == 1 && findOptimal[0][1] == -1)
+      return 1;//x01.setText("x");
+    if (findOptimal[1][2] == 1 && findOptimal[2][2] == 1 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    
+    //diagonals
+    if (findOptimal[0][0] == 1 && findOptimal[1][1] ==1 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 1 && findOptimal[2][2] ==1 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][2] == 1 && findOptimal[1][1] ==1 && findOptimal[0][0] == -1)
+     return 0;// x00.setText("x");
+    if (findOptimal[0][2] == 1 && findOptimal[1][1] ==1 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+    if (findOptimal[0][2] == 1 && findOptimal[2][0] ==1 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][0] == 1 && findOptimal[1][1] ==1 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    
+    //blocks user from all winning moves for optimal winning strategy
+    //columns
+    if (findOptimal[0][0] == 0 && findOptimal[0][1] == 0 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    if (findOptimal[1][0] == 0 && findOptimal[1][1] == 0 && findOptimal[1][2] == -1)
+      return 12;//x12.setText("x");
+    if (findOptimal[2][0] == 0 && findOptimal[2][1] == 0 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 0 && findOptimal[0][2] == 0 && findOptimal[0][1] == -1)
+      return 1;//x01.setText("x");
+    if (findOptimal[1][0] == 0 && findOptimal[1][2] == 0 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][0] == 0 && findOptimal[2][2] == 0 && findOptimal[2][1] == -1)
+      return 21;//x21.setText("x");
+    if (findOptimal[0][1] == 0 && findOptimal[0][2] == 0 && findOptimal[0][0] == -1)
+      return 0;//x00.setText("x");
+    if (findOptimal[1][1] == 0 && findOptimal[1][2] == 0 && findOptimal[1][0] == -1)
+      return 10;//x10.setText("x");
+    if (findOptimal[2][1] == 0 && findOptimal[2][2] == 0 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+  
+    //rows
+    if (findOptimal[0][0] == 0 && findOptimal[1][0] == 0 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+    if (findOptimal[0][1] == 0 && findOptimal[1][1] == 0 && findOptimal[2][1] == -1)
+      return 21;//x21.setText("x");
+    if (findOptimal[0][2] == 0 && findOptimal[1][2] == 0 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 0 && findOptimal[2][0] == 0 && findOptimal[1][0] == -1)
+      return 10;//x10.setText("x");
+    if (findOptimal[0][1] == 0 && findOptimal[2][1] == 0 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[0][2] == 0 && findOptimal[2][2] == 0 && findOptimal[1][2] == -1)
+      return 12;//x12.setText("x");
+    if (findOptimal[1][0] == 0 && findOptimal[2][0] == 0 && findOptimal[0][0] == -1)
+      return 0;//x00.setText("x");
+    if (findOptimal[1][1] == 0 && findOptimal[2][1] == 0 && findOptimal[0][1] == -1)
+      return 1;//x01.setText("x");
+    if (findOptimal[1][2] == 0 && findOptimal[2][2] == 0 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    
+    //diagonals
+    if (findOptimal[0][0] == 0 && findOptimal[1][1] == 0 && findOptimal[2][2] == -1)
+      return 22;//x22.setText("x");
+    if (findOptimal[0][0] == 0 && findOptimal[2][2] == 0 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][2] == 0 && findOptimal[1][1] == 0 && findOptimal[0][0] == -1)
+     return 0;// x00.setText("x");
+    if (findOptimal[0][2] == 0 && findOptimal[1][1] == 0 && findOptimal[2][0] == -1)
+      return 20;//x20.setText("x");
+    if (findOptimal[0][2] == 0 && findOptimal[2][0] == 0 && findOptimal[1][1] == -1)
+      return 11;//x11.setText("x");
+    if (findOptimal[2][0] == 0 && findOptimal[1][1] == 0 && findOptimal[0][2] == -1)
+      return 2;//x02.setText("x");
+    
+    
+    //second through winning moves, choses optimal move by looking for similar symbols adjacent
+    if (findOptimal[0][0] == 1 && findOptimal[1][1] == -1)
+      return 11;
+    if (findOptimal[0][0] == 1 && findOptimal[1][0] == -1)
+      return 10;
+    if (findOptimal[0][0] == 1 && findOptimal[0][1] == -1)
+      return 1;
+    
+    //failsafe means computer will always return a spot if the game is still playable
+    if (findOptimal[1][1] == -1)
+      return 11;      
+    if (findOptimal[0][0] == -1)
+      return 0;
+    if (findOptimal[0][2] == -1)
+      return 2;
+    if (findOptimal[2][0] == -1)
+      return 20;
+    if (findOptimal[2][2] == -1)
+      return 22;
+    if (findOptimal[1][0] == -1)
+      return 10;
+    if (findOptimal[0][1] == -1)
+      return 1;
+    if (findOptimal[2][1] == -1)
+      return 21;
+    if (findOptimal[1][2] == -1)
+      return 12;
+    
+    //prints instance of findOptimal inside compiler for reference
+    for (int i = 0; i < findOptimal.length; i++){
+        for (int j = 0; j < findOptimal[i].length; j++)
+          System.out.println(findOptimal[i][j]);
+    }
+    
+    return -1;//returns empty space if all spaces are unaccounted for
+  }
+  
+  //main method
+  public static void main (String args[]){
+    TicTacToeFrame myFrame = new TicTacToeFrame();//calls constructor
+    myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//allows x button to close pane
+    myFrame.pack();//packs Frame
+    myFrame.setVisible(true);//lets JFrame be seen
+  }
+}
+    
+        
